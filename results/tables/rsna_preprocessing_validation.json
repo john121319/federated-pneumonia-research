@@ -1,0 +1,10 @@
+{
+  "sample_count": 12,
+  "passed_count": 12,
+  "failed_count": 0,
+  "image_height": 128,
+  "image_width": 128,
+  "minimum_processed_value": 0.0,
+  "maximum_processed_value": 1.0,
+  "minimum_standard_deviation": 0.19973687827587128
+}

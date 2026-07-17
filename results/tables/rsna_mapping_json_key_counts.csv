@@ -1,0 +1,12 @@
+json_key,occurrences
+img_id,30000
+subset_img_id,30000
+subset_group,30000
+subset_init_label,30000
+orig_labels,30000
+StudyInstanceUID,30000
+SeriesInstanceUID,30000
+SOPInstanceUID,30000
+studyId,30000
+seriesId,30000
+instanceId,30000

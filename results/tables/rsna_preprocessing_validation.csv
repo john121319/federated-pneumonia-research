@@ -1,0 +1,13 @@
+exam_id,detailed_class,label,view_position,raw_rows,raw_columns,processed_rows,processed_columns,processed_minimum,processed_maximum,processed_mean,processed_standard_deviation,finite_values,correct_shape,within_expected_range,non_blank,validation_passed
+8d768b9e-92cb-4343-9a2a-20ce3d137695,Normal,0,PA,1024,1024,128,128,0.0,1.0,0.3985716700553894,0.2909107208251953,True,True,True,True,True
+f6bbce6a-4ebf-4fb5-9981-b0f00111618b,Normal,0,PA,1024,1024,128,128,0.0,1.0,0.5403485298156738,0.2799442410469055,True,True,True,True,True
+d72350f5-c320-43d4-b3cf-d90d5dc6b243,Normal,0,PA,1024,1024,128,128,0.0,0.9997670650482178,0.7209056615829468,0.25275135040283203,True,True,True,True,True
+bcb07b72-0e8d-43dd-a2d7-50636bf00960,Normal,0,PA,1024,1024,128,128,0.0,0.999984860420227,0.6278252601623535,0.25418826937675476,True,True,True,True,True
+8cb8c2bf-22a9-48a8-bbc6-5214070a60da,No Lung Opacity / Not Normal,0,AP,1024,1024,128,128,0.0,1.0,0.5406327843666077,0.2574595808982849,True,True,True,True,True
+d448a509-7374-4682-8374-3b6fa243ac13,No Lung Opacity / Not Normal,0,PA,1024,1024,128,128,0.0,1.0,0.7457534074783325,0.19973687827587128,True,True,True,True,True
+82820eb1-3545-4cd9-8786-d5e7ae5557cb,No Lung Opacity / Not Normal,0,AP,1024,1024,128,128,0.0,1.0,0.5626044869422913,0.23592078685760498,True,True,True,True,True
+2a34d198-3bc6-4a97-9c41-6a51df8e79f2,No Lung Opacity / Not Normal,0,PA,1024,1024,128,128,0.0,1.0,0.6415230631828308,0.2765059173107147,True,True,True,True,True
+518063cc-d0f4-44c1-9589-af6c046c6dcf,Lung Opacity,1,AP,1024,1024,128,128,0.0,1.0,0.6466623544692993,0.22259269654750824,True,True,True,True,True
+09db0213-0ad3-4062-bc7b-9a82e5a74097,Lung Opacity,1,AP,1024,1024,128,128,0.0,1.0,0.5034163594245911,0.25317832827568054,True,True,True,True,True
+2397b2f6-3dfa-476c-89ea-e9992c5bd9a9,Lung Opacity,1,AP,1024,1024,128,128,0.0,1.0,0.5313168168067932,0.3027959167957306,True,True,True,True,True
+3f2bb376-afc0-4bd2-94bf-64b55746917f,Lung Opacity,1,PA,1024,1024,128,128,0.0,1.0,0.4665704369544983,0.2981874346733093,True,True,True,True,True

@@ -1,0 +1,17 @@
+{
+  "image_count": 26684,
+  "created_count": 0,
+  "existing_count": 26684,
+  "error_count": 0,
+  "cached_file_count": 26684,
+  "image_height": 128,
+  "image_width": 128,
+  "cache_format": "16-bit grayscale PNG",
+  "cache_size_bytes": 732948435,
+  "cache_size_megabytes": 698.9940977096558,
+  "elapsed_seconds": 18.570212841033936,
+  "minimum_intensity": 0.0,
+  "maximum_intensity": 1.0,
+  "minimum_standard_deviation": 0.1526639312505722,
+  "maximum_standard_deviation": 0.3906090259552002
+}

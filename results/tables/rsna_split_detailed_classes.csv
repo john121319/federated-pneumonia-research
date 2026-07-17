@@ -1,0 +1,4 @@
+split,Lung Opacity,No Lung Opacity / Not Normal,Normal
+test,877,1713,1272
+train,4289,8388,6304
+validation,846,1720,1275

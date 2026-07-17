@@ -1,0 +1,24 @@
+{
+  "raw_label_rows": 30227,
+  "unique_examinations": 26684,
+  "negative_examinations": 20672,
+  "positive_examinations": 6012,
+  "multiple_box_examinations": 3398,
+  "maximum_boxes_per_examination": 4,
+  "dicom_file_count": 26684,
+  "labels_without_images": 0,
+  "images_without_labels": 0,
+  "dicom_read_errors": 0,
+  "missing_detailed_classes": 0,
+  "label_class_inconsistencies": 0,
+  "view_position_counts": {
+    "PA": 14511,
+    "AP": 12173
+  },
+  "sex_counts": {
+    "M": 15166,
+    "F": 11518
+  },
+  "mapping_top_level_type": "list",
+  "mapping_top_level_size": 30000
+}
