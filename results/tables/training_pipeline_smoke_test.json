@@ -1,0 +1,15 @@
+{
+  "seed": 11,
+  "tensorflow_version": "2.21.0",
+  "training_images": 18981,
+  "validation_images": 3841,
+  "batch_size": 32,
+  "image_height": 128,
+  "image_width": 128,
+  "negative_class_weight": 0.6459637898175878,
+  "positive_class_weight": 2.212753555607368,
+  "training_batch_minimum": 0.0,
+  "training_batch_maximum": 1.0,
+  "prediction_change_after_training": 0.022802820429205894,
+  "passed": true
+}

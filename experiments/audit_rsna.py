@@ -535,7 +535,6 @@ inconsistent_rows = exam_manifest[
 
 ]
 
-
 print("\nLABEL CONSISTENCY")
 
 print("=================")
@@ -567,13 +566,11 @@ if len(inconsistent_rows) > 0:
             ]
         ].head(20)
     )
-
+#Listing DICOM files from Image directory
 
 dicom_files = sorted(
     RSNA_IMAGE_DIR.glob("*.dcm")
 )
-
-
 print("\nDICOM FILE AUDIT")
 
 print("================")
@@ -584,12 +581,12 @@ print(
 )
 
 
+
+#Maping exam IDs to DICOM paths
 dicom_path_by_exam_id = {
     path.stem: path
     for path in dicom_files
 }
-
-
 label_exam_ids = set(
     exam_manifest["exam_id"]
 )
@@ -649,10 +646,29 @@ if images_without_labels:
     )
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# preparing DICOM metadata storage
+
 metadata_rows = []
 
 dicom_errors = []
-
 
 print("\nREADING DICOM HEADERS")
 
