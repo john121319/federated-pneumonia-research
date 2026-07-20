@@ -42,8 +42,6 @@ TEST_MANIFEST_PATH = (
     MANIFEST_DIR
     / "test.csv"
 )
-
-
 def choose_best_grouped_fold(
     dataframe,
     number_of_splits,
@@ -61,14 +59,10 @@ def choose_best_grouped_fold(
     overall_positive_fraction = (
         dataframe["label"].mean()
     )
-
-
     overall_class_distribution = (
         dataframe["detailed_class"]
         .value_counts(normalize=True)
     )
-
-
     best_result = None
 
 
@@ -79,8 +73,6 @@ def choose_best_grouped_fold(
             "original_patient_id"
         ],
     )
-
-
     for fold_number, (
         remaining_indices,
         holdout_indices,
@@ -91,8 +83,6 @@ def choose_best_grouped_fold(
             .iloc[remaining_indices]
             .copy()
         )
-
-
         holdout_dataframe = (
             dataframe
             .iloc[holdout_indices]
@@ -104,8 +94,6 @@ def choose_best_grouped_fold(
             len(holdout_dataframe)
             / len(dataframe)
         )
-
-
         holdout_positive_fraction = (
             holdout_dataframe[
                 "label"
@@ -137,8 +125,6 @@ def choose_best_grouped_fold(
             holdout_positive_fraction
             - overall_positive_fraction
         )
-
-
         detailed_class_error = (
             (
                 holdout_class_distribution

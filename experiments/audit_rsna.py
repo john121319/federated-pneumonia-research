@@ -645,25 +645,6 @@ if images_without_labels:
         )[:20],
     )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # preparing DICOM metadata storage
 
 metadata_rows = []
