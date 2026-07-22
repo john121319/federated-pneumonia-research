@@ -17,10 +17,14 @@ from src.dicom import (
     preprocess_dicom,
 )
 
-
 RANDOM_SEED = 42
 
-SAMPLES_PER_CLASS = 4
+SAMPLES_PER_VIEW = 2
+
+VIEW_ORDER = [
+    "PA",
+    "AP",
+]
 
 TRAIN_MANIFEST_PATH = (
     MANIFEST_DIR
@@ -121,45 +125,64 @@ class_order = [
     "Lung Opacity",
 ]
 
-
 selected_groups = []
+
+group_number = 0
 
 
 for class_name in class_order:
 
-    class_dataframe = (
-        train_dataframe[
+    for view_position in VIEW_ORDER:
+
+        group_dataframe = (
             train_dataframe[
-                "detailed_class"
+                (
+                    train_dataframe[
+                        "detailed_class"
+                    ]
+                    == class_name
+                )
+                &
+                (
+                    train_dataframe[
+                        "view_position"
+                    ]
+                    == view_position
+                )
             ]
-            == class_name
-        ]
-        .copy()
-    )
-
-
-    if (
-        len(class_dataframe)
-        < SAMPLES_PER_CLASS
-    ):
-
-        raise ValueError(
-            f"Not enough examples for "
-            f"class: {class_name}"
+            .copy()
         )
 
 
-    selected_class_dataframe = (
-        class_dataframe.sample(
-            n=SAMPLES_PER_CLASS,
-            random_state=RANDOM_SEED,
+        if (
+            len(group_dataframe)
+            < SAMPLES_PER_VIEW
+        ):
+
+            raise ValueError(
+                "Not enough examples for "
+                f"class={class_name}, "
+                f"view={view_position}"
+            )
+
+
+        selected_group_dataframe = (
+            group_dataframe.sample(
+                n=SAMPLES_PER_VIEW,
+                random_state=(
+                    RANDOM_SEED
+                    + group_number
+                ),
+            )
         )
-    )
 
 
-    selected_groups.append(
-        selected_class_dataframe
-    )
+        selected_groups.append(
+            selected_group_dataframe
+        )
+
+
+        group_number += 1
 
 
 selected_dataframe = pd.concat(
@@ -325,10 +348,18 @@ failed_dataframe = (
     ]
 )
 
+SAMPLES_PER_CLASS = (
+    len(VIEW_ORDER)
+    * SAMPLES_PER_VIEW
+)
+
 
 figure, axes = plt.subplots(
     nrows=len(class_order),
-    ncols=SAMPLES_PER_CLASS,
+    ncols=(
+        len(VIEW_ORDER)
+        * SAMPLES_PER_VIEW
+    ),
     figsize=(14, 10),
 )
 

@@ -12,6 +12,46 @@ from config import (
 LOWER_PERCENTILE = 0.5
 UPPER_PERCENTILE = 99.5
 
+def load_dicom_pixels(
+    dicom_path,
+):
+
+    dicom_path = Path(
+        dicom_path
+    )
+
+
+    if not dicom_path.exists():
+
+        raise FileNotFoundError(
+            dicom_path
+        )
+
+
+    dicom_dataset = pydicom.dcmread(
+        str(
+            dicom_path
+        )
+    )
+
+
+    pixel_array = np.asarray(
+        dicom_dataset.pixel_array,
+        dtype=np.float32,
+    )
+
+
+    if pixel_array.ndim != 2:
+
+        raise ValueError(
+            "Expected a two-dimensional grayscale "
+            f"DICOM image, but received shape "
+            f"{pixel_array.shape}."
+        )
+
+
+    return pixel_array
+
 def preprocess_dicom_with_metadata(
     dicom_path,
     target_height=IMAGE_HEIGHT,
@@ -36,12 +76,9 @@ def preprocess_dicom_with_metadata(
     )
 
 
-    pixel_array = (
-        dicom_dataset
-        .pixel_array
-        .astype(
-            np.float32
-        )
+    pixel_array = np.asarray(
+        dicom_dataset.pixel_array,
+        dtype=np.float32,
     )
 
 
@@ -69,7 +106,6 @@ def preprocess_dicom_with_metadata(
             "RescaleSlope",
             1.0,
         )
-        or 1.0
     )
 
 
@@ -79,10 +115,7 @@ def preprocess_dicom_with_metadata(
             "RescaleIntercept",
             0.0,
         )
-        or 0.0
     )
-
-
     image = (
         pixel_array
         * rescale_slope
@@ -200,7 +233,6 @@ def preprocess_dicom_with_metadata(
             "intensity variation."
         )
 
-
     image = np.clip(
         image,
         lower_value,
@@ -221,6 +253,7 @@ def preprocess_dicom_with_metadata(
         0.0,
         1.0,
     )
+
     image_tensor = tf.convert_to_tensor(
         image[
             ...,
@@ -257,7 +290,6 @@ def preprocess_dicom_with_metadata(
     ).astype(
         np.float32
     )
-
 
     metadata = {
         "dicom_path": str(
