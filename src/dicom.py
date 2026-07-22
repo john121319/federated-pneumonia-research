@@ -9,9 +9,13 @@ from config import (
     IMAGE_WIDTH,
 )
 
+LOWER_PERCENTILE = 0.5
+UPPER_PERCENTILE = 99.5
 
-def load_dicom_pixels(
+def preprocess_dicom_with_metadata(
     dicom_path,
+    target_height=IMAGE_HEIGHT,
+    target_width=IMAGE_WIDTH,
 ):
 
     dicom_path = Path(
@@ -19,48 +23,120 @@ def load_dicom_pixels(
     )
 
 
-    dicom = pydicom.dcmread(
-        dicom_path
+    if not dicom_path.exists():
+
+        raise FileNotFoundError(
+            dicom_path
+        )
+
+    dicom_dataset = pydicom.dcmread(
+        str(
+            dicom_path
+        )
     )
 
 
-    image = dicom.pixel_array.astype(
-        np.float32
+    pixel_array = (
+        dicom_dataset
+        .pixel_array
+        .astype(
+            np.float32
+        )
+    )
+
+
+    if pixel_array.ndim != 2:
+
+        raise ValueError(
+            "Expected a two-dimensional grayscale "
+            f"DICOM image, but received shape "
+            f"{pixel_array.shape}."
+        )
+
+
+    source_height = int(
+        pixel_array.shape[0]
+    )
+
+
+    source_width = int(
+        pixel_array.shape[1]
     )
 
     rescale_slope = float(
         getattr(
-            dicom,
+            dicom_dataset,
             "RescaleSlope",
             1.0,
         )
+        or 1.0
     )
 
 
     rescale_intercept = float(
         getattr(
-            dicom,
+            dicom_dataset,
             "RescaleIntercept",
             0.0,
         )
+        or 0.0
     )
 
 
     image = (
-        image * rescale_slope
+        pixel_array
+        * rescale_slope
         + rescale_intercept
     )
 
+    finite_values = image[
+        np.isfinite(
+            image
+        )
+    ]
 
-    photometric = str(
+
+    if finite_values.size == 0:
+
+        raise ValueError(
+            "The DICOM image contains no "
+            "finite pixel values."
+        )
+
+
+    finite_minimum = float(
+        finite_values.min()
+    )
+
+
+    finite_maximum = float(
+        finite_values.max()
+    )
+
+
+    image = np.nan_to_num(
+        image,
+        nan=finite_minimum,
+        posinf=finite_maximum,
+        neginf=finite_minimum,
+    )
+
+    photometric_interpretation = str(
         getattr(
-            dicom,
+            dicom_dataset,
             "PhotometricInterpretation",
             "",
         )
-    ).strip()
+    ).upper()
 
-    if photometric == "MONOCHROME1":
+
+    was_inverted = False
+
+
+    if (
+        photometric_interpretation
+        == "MONOCHROME1"
+    ):
 
         image = (
             image.max()
@@ -69,69 +145,59 @@ def load_dicom_pixels(
         )
 
 
-    image = np.nan_to_num(
-        image,
-        nan=0.0,
-        posinf=0.0,
-        neginf=0.0,
+        was_inverted = True
+
+    lower_value = float(
+        np.percentile(
+            image,
+            LOWER_PERCENTILE,
+        )
     )
 
 
-    return image
-
-
-def normalize_xray(
-    image,
-    lower_percentile=0.5,
-    upper_percentile=99.5,
-):
-
-    image = np.asarray(
-        image,
-        dtype=np.float32,
+    upper_value = float(
+        np.percentile(
+            image,
+            UPPER_PERCENTILE,
+        )
     )
 
 
-    lower_value = np.percentile(
-        image,
-        lower_percentile,
-    )
+    if not np.isfinite(
+        lower_value
+    ):
 
-
-    upper_value = np.percentile(
-        image,
-        upper_percentile,
-    )
-
-
-    if upper_value <= lower_value:
-
-        minimum = float(
+        lower_value = float(
             image.min()
         )
 
-        maximum = float(
+
+    if not np.isfinite(
+        upper_value
+    ):
+
+        upper_value = float(
             image.max()
         )
 
 
-        if maximum <= minimum:
+    if upper_value <= lower_value:
 
-            return np.zeros_like(
-                image,
-                dtype=np.float32,
-            )
-
-
-        normalized = (
-            image - minimum
-        ) / (
-            maximum - minimum
+        lower_value = float(
+            image.min()
         )
 
 
-        return normalized.astype(
-            np.float32
+        upper_value = float(
+            image.max()
+        )
+
+
+    if upper_value <= lower_value:
+
+        raise ValueError(
+            "The DICOM image has no usable "
+            "intensity variation."
         )
 
 
@@ -141,42 +207,34 @@ def normalize_xray(
         upper_value,
     )
 
-
     image = (
-        image - lower_value
+        image
+        - lower_value
     ) / (
-        upper_value - lower_value
+        upper_value
+        - lower_value
     )
 
 
-    return image.astype(
-        np.float32
-    )
-
-
-def resize_xray(
-    image,
-    height=IMAGE_HEIGHT,
-    width=IMAGE_WIDTH,
-):
-
-    image_tensor = tf.convert_to_tensor(
+    image = np.clip(
         image,
-        dtype=tf.float32,
+        0.0,
+        1.0,
     )
-
-
-    image_tensor = tf.expand_dims(
-        image_tensor,
-        axis=-1,
+    image_tensor = tf.convert_to_tensor(
+        image[
+            ...,
+            np.newaxis
+        ],
+        dtype=tf.float32,
     )
 
 
     resized_tensor = tf.image.resize(
         image_tensor,
         size=[
-            height,
-            width,
+            target_height,
+            target_width,
         ],
         method="bilinear",
         antialias=True,
@@ -186,45 +244,102 @@ def resize_xray(
     resized_image = (
         resized_tensor
         .numpy()
-        .squeeze(axis=-1)
+        .squeeze(
+            axis=-1
+        )
     )
 
 
-    return resized_image.astype(
+    resized_image = np.clip(
+        resized_image,
+        0.0,
+        1.0,
+    ).astype(
         np.float32
     )
 
+
+    metadata = {
+        "dicom_path": str(
+            dicom_path
+        ),
+
+        "source_height": (
+            source_height
+        ),
+
+        "source_width": (
+            source_width
+        ),
+
+        "target_height": int(
+            target_height
+        ),
+
+        "target_width": int(
+            target_width
+        ),
+
+        "photometric_interpretation": (
+            photometric_interpretation
+        ),
+
+        "was_inverted": bool(
+            was_inverted
+        ),
+
+        "rescale_slope": float(
+            rescale_slope
+        ),
+
+        "rescale_intercept": float(
+            rescale_intercept
+        ),
+
+        "lower_percentile": float(
+            LOWER_PERCENTILE
+        ),
+
+        "upper_percentile": float(
+            UPPER_PERCENTILE
+        ),
+
+        "lower_clipping_value": float(
+            lower_value
+        ),
+
+        "upper_clipping_value": float(
+            upper_value
+        ),
+    }
+
+
+    return (
+        resized_image,
+        metadata,
+    )
 
 def preprocess_dicom(
     dicom_path,
-    height=IMAGE_HEIGHT,
-    width=IMAGE_WIDTH,
+    target_height=IMAGE_HEIGHT,
+    target_width=IMAGE_WIDTH,
 ):
 
-    image = load_dicom_pixels(
-        dicom_path
+    image, _ = (
+        preprocess_dicom_with_metadata(
+            dicom_path=(
+                dicom_path
+            ),
+
+            target_height=(
+                target_height
+            ),
+
+            target_width=(
+                target_width
+            ),
+        )
     )
 
 
-    image = normalize_xray(
-        image
-    )
-
-
-    image = resize_xray(
-        image=image,
-        height=height,
-        width=width,
-    )
-
-
-    image = np.clip(
-        image,
-        0.0,
-        1.0,
-    )
-
-
-    return image.astype(
-        np.float32
-    )
+    return image
