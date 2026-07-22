@@ -1,17 +1,35 @@
 {
-  "image_count": 26684,
-  "created_count": 0,
-  "existing_count": 26684,
+  "source_manifest": "/Users/imac/python machine learning/federated-pneumonia-research/data/manifests/full_manifest.csv",
+  "cache_directory": "/Users/imac/python machine learning/federated-pneumonia-research/data/cache/rsna_128x128/images",
+  "expected_images": 26684,
+  "cached_png_files": 26684,
+  "created_images": 26684,
+  "reused_images": 0,
   "error_count": 0,
-  "cached_file_count": 26684,
-  "image_height": 128,
-  "image_width": 128,
-  "cache_format": "16-bit grayscale PNG",
-  "cache_size_bytes": 732948435,
-  "cache_size_megabytes": 698.9940977096558,
-  "elapsed_seconds": 18.570212841033936,
-  "minimum_intensity": 0.0,
-  "maximum_intensity": 1.0,
-  "minimum_standard_deviation": 0.1526639312505722,
-  "maximum_standard_deviation": 0.3906090259552002
+  "target_height": 128,
+  "target_width": 128,
+  "storage_format": "lossless 16-bit grayscale PNG",
+  "normalization_range": [
+    0.0,
+    1.0
+  ],
+  "blank_image_standard_deviation_threshold": 0.001,
+  "minimum_processed_standard_deviation": 0.152663916349411,
+  "maximum_processed_standard_deviation": 0.3906090259552002,
+  "cache_size_bytes": 733134879,
+  "cache_size_megabytes": 699.1719045639038,
+  "elapsed_seconds": 468.5726089477539,
+  "elapsed_minutes": 7.809543482462565,
+  "average_images_per_second": 56.947417519608535,
+  "representative_png_files_checked": 12,
+  "observed_pillow_modes": [
+    "I;16"
+  ],
+  "cached_manifest_counts": {
+    "full": 26684,
+    "train": 18981,
+    "validation": 3841,
+    "test": 3862
+  },
+  "completed_successfully": true
 }
