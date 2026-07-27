@@ -2,6 +2,7 @@
   "experiment_group": "fedavg_iid",
   "algorithm": "FedAvg",
   "partition_scheme": "iid",
+  "partition_label": "IID",
   "seeds": [
     11,
     22,
