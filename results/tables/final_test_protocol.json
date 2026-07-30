@@ -1,0 +1,340 @@
+{
+  "protocol_version": 1,
+  "created_at_utc": "2026-07-30T22:59:39.201095+00:00",
+  "study": "RSNA pneumonia-associated lung-opacity classification",
+  "purpose": "Single frozen final test-set evaluation",
+  "test_manifest_path": "/Users/imac/python machine learning/federated-pneumonia-research/data/manifests/test_cached.csv",
+  "test_manifest_opened_or_read": false,
+  "test_threshold_tuning_allowed": false,
+  "test_model_selection_allowed": false,
+  "validation_selection_metric": "validation_pr_auc",
+  "threshold_source": "validation_selected_threshold",
+  "seeds": [
+    11,
+    22,
+    33
+  ],
+  "number_of_frozen_models": 18,
+  "conditions": [
+    {
+      "condition_id": "centralized",
+      "condition_label": "Centralized",
+      "algorithm": "Centralized",
+      "partition": "centralized",
+      "seed": 11,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/centralized_main_seed_11_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/centralized_validation_report.json",
+      "model_sha256": "15fdaac2b35cc507894c29dae7eb87ce77d6293039819ca77f2e6f8f1d2a8a56",
+      "validation_report_sha256": "6c71a6c580be784a4abe60736d3915d9ebb72c0bcfb215ad4ca3bc147a9366bb",
+      "selected_validation_threshold": 0.5301659107208252,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "epoch",
+        "value": 17
+      }
+    },
+    {
+      "condition_id": "centralized",
+      "condition_label": "Centralized",
+      "algorithm": "Centralized",
+      "partition": "centralized",
+      "seed": 22,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/centralized_main_seed_22_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/centralized_validation_report.json",
+      "model_sha256": "4f84044924d81dbfbf0e44e56f10594e070799d02dc7236dbde073651e4456db",
+      "validation_report_sha256": "6c71a6c580be784a4abe60736d3915d9ebb72c0bcfb215ad4ca3bc147a9366bb",
+      "selected_validation_threshold": 0.41443008184432983,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "epoch",
+        "value": 10
+      }
+    },
+    {
+      "condition_id": "centralized",
+      "condition_label": "Centralized",
+      "algorithm": "Centralized",
+      "partition": "centralized",
+      "seed": 33,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/centralized_main_seed_33_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/centralized_validation_report.json",
+      "model_sha256": "01b715bc0c41229dc27de8f2cd0e264e7234599479547bf63d5d944b92080335",
+      "validation_report_sha256": "6c71a6c580be784a4abe60736d3915d9ebb72c0bcfb215ad4ca3bc147a9366bb",
+      "selected_validation_threshold": 0.6845529675483704,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "epoch",
+        "value": 11
+      }
+    },
+    {
+      "condition_id": "fedavg_iid",
+      "condition_label": "FedAvg IID",
+      "algorithm": "FedAvg",
+      "partition": "iid",
+      "seed": 11,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedavg_iid_seed_11_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedavg_iid_seed_11_report.json",
+      "model_sha256": "b3afbaf1470e32d85e03910dc7a102fe8fc98ae9ac633b6eac35b6287cf7f313",
+      "validation_report_sha256": "7556c37d6e97923fd9789a9545641211832fb721d1e2faef837092fcea68f5d5",
+      "selected_validation_threshold": 0.532795786857605,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 20
+      }
+    },
+    {
+      "condition_id": "fedavg_iid",
+      "condition_label": "FedAvg IID",
+      "algorithm": "FedAvg",
+      "partition": "iid",
+      "seed": 22,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedavg_iid_seed_22_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedavg_iid_seed_22_report.json",
+      "model_sha256": "e683ee9310d71614588cfdfbddd1829f780ac872eb001c46b315cfcca97afbdc",
+      "validation_report_sha256": "e075a33d57a5d7dc860ef8c0ee8661deaec79623aa162aac30b6998abeb216ef",
+      "selected_validation_threshold": 0.544445276260376,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 20
+      }
+    },
+    {
+      "condition_id": "fedavg_iid",
+      "condition_label": "FedAvg IID",
+      "algorithm": "FedAvg",
+      "partition": "iid",
+      "seed": 33,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedavg_iid_seed_33_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedavg_iid_seed_33_report.json",
+      "model_sha256": "95bb6a144fd3629f3672949f946eb9ccd4b43b72801cccb78b3bb3cd8d4f05ef",
+      "validation_report_sha256": "bd6b8d261f0a9ef8efc9b584c4630d58913eb19e67c6ec7714888d3f95afc5d6",
+      "selected_validation_threshold": 0.36231285333633423,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 14
+      }
+    },
+    {
+      "condition_id": "fedavg_alpha_05",
+      "condition_label": "FedAvg moderate non-IID",
+      "algorithm": "FedAvg",
+      "partition": "alpha_05",
+      "seed": 11,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedavg_alpha_05_seed_11_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedavg_alpha_05_seed_11_report.json",
+      "model_sha256": "e7ddc04d0c46d27d80ddfb4daf4347b23f1d5ce97357565d2976fba6eb51cb74",
+      "validation_report_sha256": "587285e849979643bf6d0bf3e22fe84c20b4da8276b959c1c2b45296b569946e",
+      "selected_validation_threshold": 0.5924621820449829,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 17
+      }
+    },
+    {
+      "condition_id": "fedavg_alpha_05",
+      "condition_label": "FedAvg moderate non-IID",
+      "algorithm": "FedAvg",
+      "partition": "alpha_05",
+      "seed": 22,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedavg_alpha_05_seed_22_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedavg_alpha_05_seed_22_report.json",
+      "model_sha256": "a66359d547895aa43b10f0e40d95c85d762c006dcb72b8c7a2f8131d97935e14",
+      "validation_report_sha256": "1c07f7ad5831d43291cfd47c30304945b64c1fc38273d4914a93f93e09a3231c",
+      "selected_validation_threshold": 0.5482327938079834,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 20
+      }
+    },
+    {
+      "condition_id": "fedavg_alpha_05",
+      "condition_label": "FedAvg moderate non-IID",
+      "algorithm": "FedAvg",
+      "partition": "alpha_05",
+      "seed": 33,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedavg_alpha_05_seed_33_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedavg_alpha_05_seed_33_report.json",
+      "model_sha256": "f19cf3b27f9b81e11a05e8dae5d15ba84865da0d399b99ed63343ca205d2efd7",
+      "validation_report_sha256": "331175d60cf774d153a5bdc00dcc2fe37dad6e311402749ff082f4ec30b90026",
+      "selected_validation_threshold": 0.4850836396217346,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 17
+      }
+    },
+    {
+      "condition_id": "fedavg_alpha_01",
+      "condition_label": "FedAvg severe non-IID",
+      "algorithm": "FedAvg",
+      "partition": "alpha_01",
+      "seed": 11,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedavg_alpha_01_seed_11_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedavg_alpha_01_seed_11_report.json",
+      "model_sha256": "5579bce71c0277e30fc9c8d9638471983730e794bf9ed964360c29135e955f06",
+      "validation_report_sha256": "6fa9da5b238c408ad63d8ac7f0050e8ab1fd79319e896c1453b5d13378de4636",
+      "selected_validation_threshold": 0.47684335708618164,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 20
+      }
+    },
+    {
+      "condition_id": "fedavg_alpha_01",
+      "condition_label": "FedAvg severe non-IID",
+      "algorithm": "FedAvg",
+      "partition": "alpha_01",
+      "seed": 22,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedavg_alpha_01_seed_22_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedavg_alpha_01_seed_22_report.json",
+      "model_sha256": "5109622a8a6debe6d86adfbb2785219cc6acb17fe563f2083349694167276879",
+      "validation_report_sha256": "5b837f5a226f716596e662f0426db3f1a2ece5b9cd0095970b8b5888621f9a64",
+      "selected_validation_threshold": 0.41798776388168335,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 20
+      }
+    },
+    {
+      "condition_id": "fedavg_alpha_01",
+      "condition_label": "FedAvg severe non-IID",
+      "algorithm": "FedAvg",
+      "partition": "alpha_01",
+      "seed": 33,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedavg_alpha_01_seed_33_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedavg_alpha_01_seed_33_report.json",
+      "model_sha256": "e8091e20a3aefa01e0562e21eca4f547613ec6076318ef2f3010aef158772a3f",
+      "validation_report_sha256": "b4bd13297c6be095fd6c47428fbc573187ee9afc0cb21009c9a972017699deaa",
+      "selected_validation_threshold": 0.5201103687286377,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 18
+      }
+    },
+    {
+      "condition_id": "fedprox_alpha_05",
+      "condition_label": "FedProx moderate non-IID",
+      "algorithm": "FedProx",
+      "partition": "alpha_05",
+      "seed": 11,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedprox_alpha_05_mu_0p01_le_1_seed_11_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedprox_alpha_05_mu_0p01_le_1_seed_11_report.json",
+      "model_sha256": "ad0fcfa255fafe701f04157c02ec72b082c8917ff89d6da666f8026767ec7195",
+      "validation_report_sha256": "9fc6ff615799c272a6325ef38732ad7b5f892aef48e4791e2759284ec404738c",
+      "selected_validation_threshold": 0.5740469098091125,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 20
+      },
+      "fedprox_mu": 0.01,
+      "local_epochs": 1
+    },
+    {
+      "condition_id": "fedprox_alpha_05",
+      "condition_label": "FedProx moderate non-IID",
+      "algorithm": "FedProx",
+      "partition": "alpha_05",
+      "seed": 22,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedprox_alpha_05_mu_0p01_le_1_seed_22_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedprox_alpha_05_mu_0p01_le_1_seed_22_report.json",
+      "model_sha256": "e96df3fc3f3d1b9929ff9bb61c2a814942f70cb0cbae5dc18a545062eac0cfb0",
+      "validation_report_sha256": "f409c774ae2cc6375ad34de1bb9cf91715aef49ac41f8fed07f49e760e17d218",
+      "selected_validation_threshold": 0.6277878880500793,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 20
+      },
+      "fedprox_mu": 0.01,
+      "local_epochs": 1
+    },
+    {
+      "condition_id": "fedprox_alpha_05",
+      "condition_label": "FedProx moderate non-IID",
+      "algorithm": "FedProx",
+      "partition": "alpha_05",
+      "seed": 33,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedprox_alpha_05_mu_0p01_le_1_seed_33_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedprox_alpha_05_mu_0p01_le_1_seed_33_report.json",
+      "model_sha256": "58cf2392b12e673edba174b608b574d51cbeb39993e9e4419e9764e313520ccf",
+      "validation_report_sha256": "362b40a134eb88b11db5445850a80a4769c8769fdc1fecef3c6fb278033eff80",
+      "selected_validation_threshold": 0.6021748185157776,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 17
+      },
+      "fedprox_mu": 0.01,
+      "local_epochs": 1
+    },
+    {
+      "condition_id": "fedprox_alpha_01",
+      "condition_label": "FedProx severe non-IID",
+      "algorithm": "FedProx",
+      "partition": "alpha_01",
+      "seed": 11,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedprox_alpha_01_mu_0p01_le_1_seed_11_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedprox_alpha_01_mu_0p01_le_1_seed_11_report.json",
+      "model_sha256": "c654d3bb0bb70219b3ce5e89e1297dc1548334c5b0df8aba9ad0449b23465f7b",
+      "validation_report_sha256": "453c0947453cb87ce16b249565556f029bce8449f7ae38af4fdf07a3084895fe",
+      "selected_validation_threshold": 0.6595580577850342,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 20
+      },
+      "fedprox_mu": 0.01,
+      "local_epochs": 1
+    },
+    {
+      "condition_id": "fedprox_alpha_01",
+      "condition_label": "FedProx severe non-IID",
+      "algorithm": "FedProx",
+      "partition": "alpha_01",
+      "seed": 22,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedprox_alpha_01_mu_0p01_le_1_seed_22_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedprox_alpha_01_mu_0p01_le_1_seed_22_report.json",
+      "model_sha256": "1c14932bfa163e87a2e656aac2ddaafbf51e32405eec4662ee58677fecae32ed",
+      "validation_report_sha256": "d9dc7d25c40a65ecf977c06c4b31f1fd6619e8f42c77c4d65d9c513b56b912f2",
+      "selected_validation_threshold": 0.6147431135177612,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 20
+      },
+      "fedprox_mu": 0.01,
+      "local_epochs": 1
+    },
+    {
+      "condition_id": "fedprox_alpha_01",
+      "condition_label": "FedProx severe non-IID",
+      "algorithm": "FedProx",
+      "partition": "alpha_01",
+      "seed": 33,
+      "model_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/models/fedprox_alpha_01_mu_0p01_le_1_seed_33_best.keras",
+      "validation_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/fedprox_alpha_01_mu_0p01_le_1_seed_33_report.json",
+      "model_sha256": "b9bc5bf57cb0d2eae7fb86188debca80615d76b89479e5f14e4c501127661e2f",
+      "validation_report_sha256": "ac359ed86f904d108992784b54dfe799047b1ffa57f4ec524e216971c5898261",
+      "selected_validation_threshold": 0.4437215030193329,
+      "validation_selection_metric": "validation_pr_auc",
+      "selected_checkpoint": {
+        "type": "round",
+        "value": 18
+      },
+      "fedprox_mu": 0.01,
+      "local_epochs": 1
+    }
+  ],
+  "final_test_report_path": "/Users/imac/python machine learning/federated-pneumonia-research/results/tables/final_test_report.json",
+  "test_set_used": false
+}
