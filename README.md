@@ -1,951 +1,251 @@
-# Federated Learning for Pneumonia-Associated Lung-Opacity Classification
+# Federated Learning Under Non-IID Client Heterogeneity for Chest-Radiograph Classification
 
-This repository presents an independent research study comparing **Federated Averaging (FedAvg)** and **Federated Proximal (FedProx)** for chest-radiograph classification under IID and non-IID federated-learning conditions.
+**Author:** Yohannes Alelign Biresaw  
+**Status:** Completed research project with code, aggregate results, figures, a research manuscript, and a frozen final-test protocol.
 
-The project investigates a practical challenge in federated medical artificial intelligence:
+> **Research-use notice:** This repository studies pneumonia-associated lung-opacity classification from frontal chest radiographs. It is not a clinically validated diagnostic system and must not be used for patient care.
 
-> How does increasing client heterogeneity affect federated medical-image classification, and can FedProx control client drift more effectively than FedAvg?
+## Overview
 
-The study includes patient-aware data preparation, centralized and federated baselines, controlled non-IID experiments, three random seeds, validation-only model selection, a frozen final-test protocol, and a single final test evaluation.
+This project evaluates how client heterogeneity changes the behaviour of federated medical-image classifiers. It compares centralized training, Federated Averaging (FedAvg), and Federated Proximal optimization (FedProx) under approximately IID, moderately non-IID, and severely non-IID client partitions.
 
----
+The work emphasizes reproducibility and evaluation discipline:
 
-## Research Title
+- patient-exclusive train, validation, and test splits;
+- patient-exclusive federated clients;
+- three random seeds;
+- validation-only checkpoint and threshold selection;
+- direct measurement of client and global update magnitudes; and
+- one frozen final evaluation of 18 selected model-threshold pairs.
 
-**Evaluating FedAvg and FedProx for Federated Classification of Pneumonia-Associated Lung Opacity Under Non-IID Data**
+### Main finding
 
----
+Increasing client heterogeneity reduced federated predictive performance, especially PR-AUC. FedProx reduced best-checkpoint client and global update magnitudes by roughly one-half, but this stronger optimization control did not consistently improve held-out ROC-AUC or PR-AUC. FedAvg retained a small PR-AUC advantage, while FedProx achieved slightly higher balanced accuracy and F1-score under both non-IID conditions.
 
-## Project Overview
+## Research questions
 
-Medical institutions often cannot combine patient data in one central location because of privacy, governance, security, and institutional restrictions.
+1. How does increasing non-IID client heterogeneity affect federated predictive performance?
+2. Does FedProx reduce client drift relative to FedAvg?
+3. Does lower update magnitude translate into better performance on unseen patients?
+4. How does federated training compare with a centralized reference under the same patient-aware split?
 
-Federated learning offers an alternative. Multiple institutions can collaboratively train a shared model while keeping their raw data locally.
+## Dataset and provenance
 
-However, hospital data are rarely distributed identically. Differences may arise from:
+The project uses the **RSNA Pneumonia Detection Challenge 2018** dataset.
 
-- disease prevalence;
-- patient demographics;
-- imaging equipment;
-- acquisition protocols;
-- clinical workflows;
-- institutional practices.
-
-These differences create **non-independent and identically distributed data**, commonly called **non-IID data**.
-
-Non-IID data can cause local models to learn in different directions, leading to client drift and weaker global-model performance.
-
-This project compares six experimental conditions:
-
-1. Centralized training
-2. FedAvg with approximately IID clients
-3. FedAvg with moderate non-IID clients
-4. FedAvg with severe non-IID clients
-5. FedProx with moderate non-IID clients
-6. FedProx with severe non-IID clients
-
-The federated clients in this study are simulated research clients rather than real hospitals.
-
----
-
-## Research Questions
-
-This study addresses the following questions:
-
-1. How does federated learning compare with centralized training for pneumonia-associated lung-opacity classification?
-2. How does increasing client heterogeneity affect predictive performance?
-3. Does FedProx improve predictive performance compared with FedAvg?
-4. Does FedProx reduce local-client and global-model update magnitudes?
-5. Which evaluation metrics are most affected by increasing non-IID heterogeneity?
-
----
-
-## Dataset and Provenance
-
-This study uses the **RSNA Pneumonia Detection Challenge 2018** dataset.
-
-Official sources:
-
-- [RSNA Pneumonia Detection Challenge on Kaggle](https://www.kaggle.com/c/rsna-pneumonia-detection-challenge/data)
-- [Official RSNA Pneumonia Detection Challenge page](https://www.rsna.org/artificial-intelligence/ai-image-challenge/rsna-pneumonia-detection-challenge-2018)
-
-The downloaded research data included:
-
-- `stage_2_train_images/`
-- `stage_2_train_labels.csv`
-- `stage_2_detailed_class_info.csv`
-- the official RSNA-to-NIH image mapping file
-
-The RSNA-to-NIH mapping was used to associate RSNA examination identifiers with the corresponding original NIH image and patient identifiers.
-
-This mapping enabled patient-aware train, validation, and test splitting and helped prevent the same patient from appearing in more than one split.
-
-### Verified Dataset Summary
+- [Dataset on Kaggle](https://www.kaggle.com/c/rsna-pneumonia-detection-challenge/data)
+- [Official RSNA challenge page and mapping resource](https://www.rsna.org/artificial-intelligence/ai-image-challenge/rsna-pneumonia-detection-challenge-2018)
 
 | Item | Count |
 |---|---:|
-| DICOM examinations | 26,684 |
+| Annotation rows | 30,227 |
+| Unique radiographic examinations | 26,684 |
 | Original patients | 11,452 |
-| Negative examinations | 20,672 |
 | Positive examinations | 6,012 |
-| PA-view examinations | 14,511 |
-| AP-view examinations | 12,173 |
+| Negative examinations | 20,672 |
 
-The raw RSNA DICOM files are not redistributed in this repository.
+The RSNA-to-NIH mapping was used to recover original patient identifiers. Raw DICOM data are not redistributed in this repository.
 
-Researchers must download the dataset from the official source and comply with its terms of use.
-
----
-
-## Prediction Task
-
-The study performs binary chest-radiograph classification:
-
-- `1` — pneumonia-associated lung opacity
-- `0` — no pneumonia-associated lung opacity
-
-The positive class should not be interpreted as a definitive clinical diagnosis of pneumonia.
-
-This project is intended only for research and educational purposes.
-
----
-
-## Patient-Aware Data Splitting
-
-The dataset was divided according to the original patient identifier.
-
-This ensures that all examinations belonging to the same patient remain in only one split.
+### Patient-aware split
 
 | Split | Images | Patients | Positive | Negative |
-|---|---:|---:|---:|---:|
+| --- | ---: | ---: | ---: | ---: |
 | Training | 18,981 | 8,148 | 4,289 | 14,692 |
 | Validation | 3,841 | 1,658 | 846 | 2,995 |
 | Test | 3,862 | 1,646 | 877 | 2,985 |
 
-Verified patient overlap:
+Patient overlap across the three splits is zero.
 
-```text
-Training–validation overlap: 0
-Training–test overlap:       0
-Validation–test overlap:     0
-```
+## Task definition
 
-Patient-aware splitting reduces information leakage and provides a more reliable estimate of model generalization.
+The project performs examination-level binary classification:
 
----
+- `1`: pneumonia-associated lung opacity;
+- `0`: no pneumonia-associated lung opacity.
 
-## Image Preprocessing
+Multiple opacity bounding-box rows for the same radiograph were collapsed into one positive examination-level label. The target is a research label and should not be interpreted as a definitive clinical diagnosis.
 
-The preprocessing pipeline performs the following steps:
+## Preprocessing
 
-1. Read the original DICOM image.
-2. Apply the DICOM rescale slope and intercept.
-3. Replace non-finite pixel values.
-4. Correct `MONOCHROME1` images when necessary.
-5. Apply percentile-based intensity clipping.
-6. Normalize pixel values to `[0, 1]`.
-7. Resize images to `128 × 128`.
-8. Save a lossless 16-bit PNG cache for faster training.
+The pipeline applies DICOM rescale slope and intercept, replaces non-finite values, corrects `MONOCHROME1` images, clips intensities by robust percentiles, normalizes to `[0, 1]`, resizes to `128 x 128`, and stores a lossless 16-bit PNG cache.
 
-The final model input shape is:
+![Representative preprocessing examples](results/figures/rsna_preprocessing_examples.png)
 
-```text
-128 × 128 × 1
-```
+## Model and training design
 
-Only modest training augmentation was used.
+The same compact CNN was used across the primary conditions:
 
-Horizontal and vertical flips were not applied because they may create anatomically inappropriate chest-radiograph transformations.
+- four convolutional blocks with 32, 64, 128, and 256 filters;
+- batch normalization and ReLU activations;
+- max pooling after the first three blocks;
+- global average pooling;
+- dropout of `0.30`;
+- sigmoid output;
+- 389,537 total parameters.
 
----
-
-## CNN Architecture
-
-The same general convolutional neural network was used across the main experimental conditions.
-
-```text
-Input: 128 × 128 × 1
-
-Convolution: 32 filters
-Batch normalization
-ReLU
-Max pooling
-
-Convolution: 64 filters
-Batch normalization
-ReLU
-Max pooling
-
-Convolution: 128 filters
-Batch normalization
-ReLU
-Max pooling
-
-Convolution: 256 filters
-Batch normalization
-ReLU
-
-Global average pooling
-Dropout: 0.30
-Sigmoid output
-```
-
-Total model parameters:
-
-```text
-389,537
-```
-
----
-
-## Centralized Training
-
-In centralized training, all training images are available to one model in one location.
-
-```text
-All training data
-        ↓
-    One CNN model
-        ↓
- Centralized training
-```
-
-Centralized training does not use FedAvg or FedProx.
-
-It is included as a reference baseline showing the performance that can be achieved when all training data are combined.
-
----
-
-## Federated-Learning Design
-
-The training data were divided among five simulated clients.
-
-Each client trained a local model using only its assigned data.
-
-The server then combined the client models to update the global model.
-
-```text
-Client 1 ─┐
-Client 2 ─┤
-Client 3 ─┼── Local training ── Server aggregation ── Global model
-Client 4 ─┤
-Client 5 ─┘
-```
-
----
-
-## FedAvg
-
-FedAvg trains one local model on each client and calculates a sample-size-weighted average of the client model weights.
-
-The basic process is:
-
-1. Send the current global model to each client.
-2. Train the model locally.
-3. Return the updated client weights.
-4. Calculate a weighted average.
-5. Replace the global model weights.
-6. Repeat for the next communication round.
-
-The server aggregates the complete model weights, including batch-normalization moving statistics.
-
----
-
-## FedProx
-
-FedProx follows a similar aggregation process but adds a proximal penalty to the local training objective.
-
-The penalty discourages the local client model from moving too far from the current global model.
-
-This is intended to reduce client drift when the clients have heterogeneous data distributions.
-
-The main FedProx configuration was:
-
-```text
-FedProx coefficient μ: 0.01
-Clients:               5
-Communication rounds:  20
-Local epochs:           1
-Batch size:             32
-Random seeds:           11, 22, 33
-```
-
-The proximal penalty was applied only to trainable variables.
-
-Batch-normalization moving means and variances were excluded from the proximal penalty.
-
----
-
-## IID and Non-IID Partitions
-
-Three federated partition settings were studied.
-
-| Partition | Description |
+| Setting | Value |
 |---|---|
-| IID | Clients have approximately similar label distributions |
-| Moderate non-IID | Dirichlet label partition with `α = 0.5` |
-| Severe non-IID | Dirichlet label partition with `α = 0.1` |
+| Input | `128 x 128 x 1` |
+| Optimizer | Adam |
+| Learning rate | `0.0005` |
+| Batch size | `32` |
+| Federated clients | `5` |
+| Communication rounds | `20` |
+| Local epochs | `1` |
+| Seeds | `11`, `22`, `33` |
+| FedProx coefficient | `mu = 0.01` |
+| Checkpoint criterion | Validation PR-AUC |
+| Threshold selection | Validation Youden index |
 
-Lower Dirichlet alpha values create stronger differences between client label distributions.
+Five simulated clients were created from the training split. The non-IID settings used Dirichlet label-skew partitions with `alpha = 0.5` and `alpha = 0.1`. All examinations from the same patient remained on the same client.
 
-All examinations belonging to the same patient were assigned to the same federated client.
+## Final frozen test results
 
-This maintained patient integrity and prevented patient overlap between clients.
+Values are mean ± sample standard deviation across seeds 11, 22, and 33.
 
----
-
-## Experimental Configuration
-
-The main experimental protocol used:
-
-```text
-Clients:                 5
-Federated rounds:        20
-Local epochs:            1
-Batch size:              32
-Optimizer:               Adam
-Learning rate:           0.0005
-Random seeds:            11, 22, 33
-FedProx μ:                0.01
-Primary selection metric: Validation PR-AUC
-```
-
-Class weights were calculated from the global training distribution:
-
-```text
-Negative-class weight: 0.645964
-Positive-class weight: 2.212754
-```
-
-Three random seeds were used to reduce dependence on a single random initialization.
-
----
-
-## Model Selection and Final-Test Protocol
-
-Model selection was based only on validation PR-AUC.
-
-Classification thresholds were also selected using validation data.
-
-The test set was not used during:
-
-- model training;
-- checkpoint selection;
-- threshold selection;
-- hyperparameter selection;
-- comparison of candidate models.
-
-Before the final evaluation, the following items were frozen:
-
-- 18 selected model files;
-- selected checkpoints;
-- validation-selected thresholds;
-- validation reports;
-- model SHA-256 hashes;
-- report SHA-256 hashes.
-
-The final test set was then evaluated once using the frozen protocol.
-
-Final-test safeguards:
-
-```text
-Threshold tuned on test:       False
-Model selected on test:        False
-Final evaluation repeated:     False
-Training–test overlap:         0
-Validation–test overlap:       0
-```
-
----
-
-## Evaluation Metrics
-
-The study reports:
-
-- ROC-AUC;
-- PR-AUC;
-- balanced accuracy;
-- F1-score;
-- accuracy;
-- precision;
-- sensitivity;
-- specificity;
-- average precision;
-- log loss;
-- confusion-matrix counts;
-- global-update L2 magnitude;
-- mean client-update L2 magnitude.
-
-PR-AUC was treated as an important metric because the positive class is less common than the negative class.
-
----
-
-## Final Test Results
-
-Results are reported as mean ± standard deviation across three random seeds.
-
-| Condition | ROC-AUC | PR-AUC | Balanced Accuracy | F1-Score |
-|---|---:|---:|---:|---:|
-| **Centralized** | **0.8295 ± 0.0040** | **0.5800 ± 0.0057** | **0.7510 ± 0.0037** | **0.5745 ± 0.0107** |
+| Condition | ROC-AUC | PR-AUC | Balanced accuracy | F1-score |
+| --- | ---: | ---: | ---: | ---: |
+| Centralized | 0.8295 ± 0.0040 | 0.5800 ± 0.0057 | 0.7510 ± 0.0037 | 0.5745 ± 0.0107 |
 | FedAvg IID | 0.8179 ± 0.0030 | 0.5605 ± 0.0042 | 0.7453 ± 0.0048 | 0.5695 ± 0.0068 |
 | FedAvg moderate non-IID | 0.8131 ± 0.0027 | 0.5553 ± 0.0065 | 0.7355 ± 0.0032 | 0.5541 ± 0.0055 |
 | FedAvg severe non-IID | 0.8070 ± 0.0005 | 0.5440 ± 0.0043 | 0.7312 ± 0.0020 | 0.5529 ± 0.0029 |
 | FedProx moderate non-IID | 0.8112 ± 0.0020 | 0.5505 ± 0.0040 | 0.7375 ± 0.0050 | 0.5608 ± 0.0036 |
 | FedProx severe non-IID | 0.8076 ± 0.0019 | 0.5428 ± 0.0092 | 0.7335 ± 0.0030 | 0.5581 ± 0.0076 |
 
----
-
-## Interpretation of the Results
-
-### Centralized Performance
-
-Centralized training achieved the strongest overall test performance.
-
-This was expected because the centralized model trained directly on the complete training dataset without federated client separation or aggregation.
-
-Centralized learning is included as a performance reference, not as a privacy-preserving solution.
-
----
-
-### FedAvg IID Performance
-
-FedAvg IID was the strongest federated condition overall.
-
-The clients had approximately similar data distributions, making the federated optimization problem easier than the moderate and severe non-IID settings.
-
-FedAvg IID achieved:
-
-```text
-ROC-AUC:           0.8179
-PR-AUC:            0.5605
-Balanced accuracy: 0.7453
-F1-score:          0.5695
-```
-
----
-
-### Effect of Non-IID Heterogeneity
-
-Increasing client heterogeneity reduced federated performance.
-
-The clearest decline appeared in PR-AUC.
-
-```text
-FedAvg:
-Moderate non-IID PR-AUC: 0.5553
-Severe non-IID PR-AUC:   0.5440
-
-FedProx:
-Moderate non-IID PR-AUC: 0.5505
-Severe non-IID PR-AUC:   0.5428
-```
-
-This suggests that minority-class ranking performance is particularly sensitive to heterogeneous client distributions.
-
----
-
-## FedAvg Versus FedProx
-
-Neither FedAvg nor FedProx consistently outperformed the other across every predictive metric.
-
-### Moderate Non-IID
-
-| Metric | FedAvg | FedProx | Better Result |
-|---|---:|---:|---|
-| ROC-AUC | **0.8131** | 0.8112 | FedAvg |
-| PR-AUC | **0.5553** | 0.5505 | FedAvg |
-| Balanced accuracy | 0.7355 | **0.7375** | FedProx |
-| F1-score | 0.5541 | **0.5608** | FedProx |
-
-### Severe Non-IID
-
-| Metric | FedAvg | FedProx | Better Result |
-|---|---:|---:|---|
-| ROC-AUC | 0.8070 | **0.8076** | FedProx, slightly |
-| PR-AUC | **0.5440** | 0.5428 | FedAvg, slightly |
-| Balanced accuracy | 0.7312 | **0.7335** | FedProx |
-| F1-score | 0.5529 | **0.5581** | FedProx |
-
-FedAvg achieved slightly higher PR-AUC in both non-IID conditions.
-
-FedProx achieved slightly higher balanced accuracy and F1-score in both non-IID conditions.
-
-The differences in predictive performance were generally small.
-
----
-
-## Client-Drift Analysis
-
-FedProx produced a clearer advantage in controlling optimization drift.
-
-At the validation-selected checkpoints, FedProx reduced update magnitudes by approximately:
-
-| Condition | Global-Update Reduction | Mean Client-Update Reduction |
-|---|---:|---:|
-| Moderate non-IID | 51.27% | 52.08% |
-| Severe non-IID | 48.83% | 43.53% |
-
-These results show that FedProx successfully constrained local-client and global-model movement.
-
-However, the reduction in update magnitude did not consistently produce better ROC-AUC or PR-AUC on the final test set.
-
----
-
-## Main Findings
-
-The main findings are:
-
-1. Centralized learning achieved the strongest overall predictive performance.
-2. FedAvg IID was the strongest federated condition.
-3. Increasing non-IID heterogeneity reduced federated performance.
-4. PR-AUC was especially sensitive to increasing heterogeneity.
-5. FedAvg achieved slightly higher PR-AUC than FedProx under both non-IID conditions.
-6. FedProx achieved slightly higher balanced accuracy and F1-score.
-7. FedProx substantially reduced client and global update magnitudes.
-8. Better optimization stability did not automatically lead to better predictive generalization.
-9. Neither FedAvg nor FedProx consistently dominated across all metrics.
-
----
-
-## Main Conclusion
-
-Increasing client heterogeneity progressively reduced federated classification performance, particularly PR-AUC.
-
-FedProx with `μ = 0.01` substantially reduced local-client and global-model update magnitudes, demonstrating stronger control of client drift.
-
-However, this optimization stability did not produce consistent improvements in final predictive ranking compared with FedAvg.
-
-The central conclusion is:
-
-> FedAvg and FedProx achieved broadly comparable predictive performance under non-IID conditions. FedAvg produced slightly higher PR-AUC, while FedProx provided stronger client-drift control and slightly higher balanced accuracy and F1-score.
-
----
-
-## Selected Figures
-
-### Final Test PR-AUC
-
 ![Final test PR-AUC comparison](results/figures/final_test_pr_auc_comparison.png)
-
-### Final Test ROC-AUC
 
 ![Final test ROC-AUC comparison](results/figures/final_test_roc_auc_comparison.png)
 
-### Final Test Balanced Accuracy
+## Client-drift analysis
 
-![Final test balanced-accuracy comparison](results/figures/final_test_balanced_accuracy_comparison.png)
+At the validation-selected checkpoints, FedProx reduced update magnitudes substantially:
 
-### Final Test F1-Score
+| Non-IID condition | Global-update reduction | Mean client-update reduction |
+|---|---:|---:|
+| Moderate (`alpha = 0.5`) | 51.27% | 52.08% |
+| Severe (`alpha = 0.1`) | 48.83% | 43.53% |
 
-![Final test F1-score comparison](results/figures/final_test_f1_score_comparison.png)
+![Best-checkpoint global update magnitude](results/figures/fedavg_fedprox_global_update_l2_comparison.png)
 
-### Global-Update Magnitude
+![Best-checkpoint mean client update magnitude](results/figures/fedavg_fedprox_mean_client_update_l2_comparison.png)
 
-![Global-update comparison](results/figures/fedavg_fedprox_global_update_l2_comparison.png)
-
-### Mean Client-Update Magnitude
-
-![Mean client-update comparison](results/figures/fedavg_fedprox_mean_client_update_l2_comparison.png)
-
-### Preprocessing Examples
-
-![RSNA preprocessing examples](results/figures/rsna_preprocessing_examples.png)
-
----
-
-## Repository Structure
+## Repository structure
 
 ```text
 federated-pneumonia-research/
 ├── README.md
 ├── config.py
 ├── requirements.txt
-│
-├── dataset/
-│   └── rsna/
-│       └── raw/
-│
-├── data/
-│   ├── cache/
-│   ├── manifests/
-│   └── partitions/
-│
-├── experiments/
-│   ├── audit_rsna.py
-│   ├── build_manifest.py
-│   ├── validate_preprocessing.py
-│   ├── cache_images.py
-│   ├── create_partitions.py
-│   ├── smoke_test_pipeline.py
-│   ├── train_centralized_dev.py
-│   ├── train_fedavg.py
-│   ├── train_fedprox.py
-│   ├── summarize_fedavg.py
-│   ├── summarize_fedprox.py
-│   ├── compare_fedavg_conditions.py
-│   ├── compare_fedavg_fedprox.py
-│   ├── freeze_final_test_protocol.py
-│   └── evaluate_final_test.py
-│
 ├── src/
-│   ├── data.py
-│   ├── dicom.py
-│   ├── model.py
-│   ├── metrics.py
-│   ├── partitions.py
-│   ├── federated.py
-│   └── fedprox.py
-│
+├── experiments/
+├── research/
 ├── results/
 │   ├── figures/
-│   ├── tables/
-│   ├── models/
-│   ├── logs/
-│   └── raw/
-│
-├── research/
+│   └── tables/
 ├── paper/
 ├── proposal/
+├── docs/
 └── portfolio/
 ```
 
-Raw data, cached images, large model files, personal documents, and temporary files should not be committed to GitHub.
+Raw images, cached images, large model files, raw predictions, temporary logs, environment folders, and personal documents should remain outside the public repository.
 
----
+## Reproduction workflow
 
-## Environment
-
-The experiments were developed using:
-
-```text
-Python:      3.10
-TensorFlow:  2.21
-Platform:    macOS Apple Silicon
-Compute:     CPU
-```
-
-Create and activate a virtual environment:
-
-```bash
-python -m venv fed-pneumo-env
-source fed-pneumo-env/bin/activate
-```
-
-Upgrade `pip` and install the dependencies:
-
-```bash
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-Conda may also be used.
-
----
-
-## Dataset Setup
-
-Download the RSNA Pneumonia Detection Challenge dataset from Kaggle.
-
-Place the required files under:
-
-```text
-dataset/rsna/raw/
-```
-
-Expected structure:
-
-```text
-dataset/rsna/raw/
-├── stage_2_train_images/
-├── stage_2_train_labels.csv
-├── stage_2_detailed_class_info.csv
-└── pneumonia-challenge-dataset-mappings_2018.json
-```
-
-The exact mapping filename may vary depending on the download source.
-
----
-
-## Reproduction Workflow
-
-Run all commands from the repository root.
-
-### 1. Audit the Raw Dataset
+Run commands from the repository root.
 
 ```bash
 python -m experiments.audit_rsna
-```
-
-This verifies:
-
-- image counts;
-- label counts;
-- duplicate rows;
-- conflicting labels;
-- multi-box examinations;
-- view-position distributions.
-
-### 2. Build Patient-Aware Manifests
-
-```bash
 python -m experiments.build_manifest
-```
-
-This creates patient-aware training, validation, and test manifests.
-
-### 3. Validate DICOM Preprocessing
-
-```bash
 python -m experiments.validate_preprocessing
-```
-
-This checks preprocessing numerically and visually.
-
-### 4. Cache the Images
-
-```bash
 python -m experiments.cache_images
-```
-
-This converts the preprocessed DICOM images into a faster lossless image cache.
-
-### 5. Create Federated Partitions
-
-```bash
 python -m experiments.create_partitions
-```
-
-This creates IID, moderate non-IID, and severe non-IID client partitions.
-
-### 6. Run the Pipeline Smoke Test
-
-```bash
 python -m experiments.smoke_test_pipeline
 ```
 
-This verifies the data loader, model, loss, augmentation, class weights, and training pipeline.
-
-### 7. Train Centralized Models
-
-Use the centralized-training scripts under:
-
-```text
-experiments/
-```
-
-### 8. Train FedAvg Models
+Training and comparison modules are available under `experiments/`. Review each module's command-line options before running:
 
 ```bash
-python -m experiments.train_fedavg
+python -m experiments.train_fedavg --help
+python -m experiments.train_fedprox --help
 ```
 
-### 9. Test and Train FedProx
+### Frozen final evaluation
 
-```bash
-python -m experiments.smoke_test_fedprox
-python -m experiments.train_fedprox
-```
-
-### 10. Generate Validation Comparisons
-
-```bash
-python -m experiments.compare_fedavg_conditions
-python -m experiments.compare_fedavg_fedprox
-```
-
-### 11. Freeze the Final-Test Protocol
-
-```bash
-python -m experiments.freeze_final_test_protocol
-```
-
-### 12. Final-Test Evaluation
-
-The official final-test evaluation in this repository has already been completed using a frozen one-time protocol.
-
-The existing final results should not be overwritten or presented as newly generated results without independently repeating the complete study.
-
----
-
-## Important Result Files
+The final test was evaluated once after model paths, model hashes, validation-report hashes, checkpoints, and validation-selected thresholds were frozen.
 
 ```text
 results/tables/final_test_protocol.json
 results/tables/final_test_report.json
-results/tables/final_test_per_seed_results.csv
 results/tables/final_test_aggregate_results.csv
 results/tables/final_test_evaluation_completed.lock
-
-results/tables/fedavg_fedprox_comparison_report.json
-results/tables/fedavg_fedprox_paired_summary.csv
-results/tables/fedavg_fedprox_heterogeneity_summary.csv
 ```
 
----
+Do not rerun the final test to select better outcomes. Any future extension should use validation data, a newly defined independent test protocol, or an external dataset.
 
-## Files Not Included in the Repository
+## Research documents
 
-The following files should not be uploaded to GitHub:
+### Completed research
 
-- raw RSNA DICOM images;
-- cached medical images;
-- large trained-model files;
-- private certificates;
-- transcripts;
-- passport or visa documents;
-- environment folders;
-- temporary training logs;
-- local system files;
-- personal information;
-- downloaded dataset archives.
+- [Research manuscript](paper/Federated_Pneumonia_Research_Manuscript.md)
+- [Research manuscript PDF](paper/Federated_Pneumonia_Research_Manuscript.pdf)
 
-These files should be excluded through `.gitignore`.
+### Proposed graduate direction
 
----
+- [Secure and robust federated-learning proposal](proposal/Secure_Robust_Federated_Learning_Proposal.md)
+- [Proposal PDF](proposal/Secure_Robust_Federated_Learning_Proposal.pdf)
+
+### Research profile documents
+
+- [Research profile](docs/Yohannes_Alelign_Biresaw_Research_Profile.md)
+- [Research profile PDF](docs/Yohannes_Alelign_Biresaw_Research_Profile.pdf)
+- [Graduate research statement](docs/Yohannes_Alelign_Biresaw_Graduate_Research_Statement.md)
+- [Graduate research statement PDF](docs/Yohannes_Alelign_Biresaw_Graduate_Research_Statement.pdf)
+- [Academic and research projects](portfolio/Academic_and_Research_Projects.md)
+
+The manuscript reports the completed experiment. The proposal and graduate research statement describe future work and do not claim that malicious-client experiments have already been completed.
+
+## Planned research extension
+
+The next research direction is **secure and robust federated learning under heterogeneous and adversarial clients**. The central question is how robust aggregation can reject malicious updates without suppressing legitimate updates from clients whose data are naturally non-IID.
+
+Planned topics include:
+
+- model-poisoning and label-flipping attacks;
+- coordinate-wise median, trimmed mean, Krum/Multi-Krum, geometric median, and trust-based aggregation;
+- benign-client false rejection under label and view-position heterogeneity;
+- worst-client performance, calibration, and attack-aware evaluation; and
+- the privacy-security trade-off created when a server must inspect individual updates.
+
+This is planned future work. The current repository contains no completed malicious-client or robust-aggregation results.
 
 ## Limitations
 
-This study has several limitations:
+- Clients are simulated partitions from one public dataset, not independent hospitals.
+- The main heterogeneity mechanism is label skew.
+- One CNN architecture, one FedProx coefficient, one local epoch, and 20 rounds were used.
+- Three seeds support descriptive comparison but not strong claims of statistical significance.
+- FedAvg and FedProx used different local-training loop implementations.
+- Federated learning alone does not provide formal privacy or security guarantees.
 
-1. The federated clients were simulated from one public dataset rather than collected from independent hospitals.
-2. The non-IID settings mainly represent controlled label-distribution heterogeneity.
-3. Only one FedProx coefficient, `μ = 0.01`, was evaluated in the main study.
-4. The experiments used a compact custom CNN rather than a large pretrained medical-imaging model.
-5. The experiments were performed using CPU-based local computing.
-6. No external hospital dataset was available for independent validation.
-7. The task predicts pneumonia-associated lung opacity rather than providing a complete clinical pneumonia diagnosis.
-8. The study used three random seeds, which supports descriptive comparison but not strong statistical-significance claims.
-9. The FedAvg and FedProx local-training implementations were not completely identical internally.
-10. Communication cost, differential privacy, and secure aggregation were outside the scope of the current study.
+## Responsible use
 
----
-
-## Future Work
-
-Possible extensions include:
-
-- external validation using independent hospital data;
-- feature-skew and acquisition-skew experiments;
-- multiple FedProx coefficients;
-- additional local-epoch settings;
-- more federated clients;
-- personalized federated learning;
-- client-level fairness evaluation;
-- uncertainty estimation;
-- probability calibration;
-- communication-cost analysis;
-- secure aggregation;
-- differential privacy;
-- adversarial-client robustness;
-- stronger federated optimizers;
-- pretrained medical-imaging models;
-- privacy-preserving explainability;
-- real multi-institutional federated evaluation.
-
----
-
-## Research Materials
-
-The repository may include the following supporting documents:
-
-```text
-paper/
-    Research manuscript draft
-
-proposal/
-    Thesis proposal draft
-
-research/
-    Research notes
-    Experiment documentation
-    Research log
-
-portfolio/
-    Academic-project descriptions
-    CV research entries
-    Scholarship materials
-```
-
-The manuscript should be described as:
-
-> Research manuscript in preparation
-
-It should not be described as a published paper unless it has been formally accepted and published.
-
----
-
-## Responsible-Use Statement
-
-This repository is provided for research and educational purposes.
-
-The models are not approved medical devices.
-
-They must not be used for:
-
-- clinical diagnosis;
-- treatment decisions;
-- emergency triage;
-- patient management;
-- independent interpretation of medical images.
-
-Any future clinical application would require:
-
-- external clinical validation;
-- regulatory review;
-- bias and fairness assessment;
-- privacy and security evaluation;
-- prospective testing;
-- oversight by qualified medical professionals.
-
----
-
-## Author
-
-**Yohannes Alelign Biresaw**
-
-BSc in Electrical and Computer Engineering  
-Haramaya University, Ethiopia
-
-Current research interests:
-
-- federated learning;
-- trustworthy artificial intelligence;
-- medical-image analysis;
-- privacy-preserving machine learning;
-- cybersecurity;
-- embedded systems;
-- robotics.
-
-GitHub: [john121319](https://github.com/john121319)
-
-Email: `yohannes.sch.ca@gmail.com`
-
----
+This repository is intended for research and education. The models are not approved medical devices and must not be used for diagnosis, treatment, triage, or patient management.
 
 ## Citation
 
-This work is currently an independent research project and manuscript in preparation.
-
 ```bibtex
-@unpublished{biresaw2026federated,
+@misc{biresaw2026federatedpneumonia,
   author = {Yohannes Alelign Biresaw},
-  title = {Evaluating FedAvg and FedProx for Federated Classification of Pneumonia-Associated Lung Opacity Under Non-IID Data},
-  note = {Independent research project and manuscript in preparation},
-  year = {2026}
+  title = {FedAvg and FedProx Under Controlled Non-IID Client Heterogeneity for Pneumonia-Associated Lung-Opacity Classification},
+  year = {2026},
+  howpublished = {GitHub research repository},
+  url = {https://github.com/john121319/federated-pneumonia-research}
 }
 ```
 
----
+## Author
 
-## Acknowledgements
-
-This project uses data from the RSNA Pneumonia Detection Challenge.
-
-The author acknowledges:
-
-- the Radiological Society of North America;
-- the challenge organizers;
-- the contributing radiologists;
-- the National Institutes of Health;
-- the researchers who created the original dataset;
-- the researchers who made the annotations and mapping resources available for scientific study.
+**Yohannes Alelign Biresaw**  
+BSc in Electrical and Computer Engineering, Haramaya University, Ethiopia  
+Research direction: secure and trustworthy distributed machine learning, with current research experience in federated medical imaging.
