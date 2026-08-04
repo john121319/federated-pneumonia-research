@@ -183,28 +183,6 @@ results/tables/final_test_evaluation_completed.lock
 
 Do not rerun the final test to select better outcomes. Any future extension should use validation data, a newly defined independent test protocol, or an external dataset.
 
-## Research documents
-
-### Completed research
-
-- [Research manuscript](paper/Federated_Pneumonia_Research_Manuscript.md)
-- [Research manuscript PDF](paper/Federated_Pneumonia_Research_Manuscript.pdf)
-
-### Proposed graduate direction
-
-- [Secure and robust federated-learning proposal](proposal/Secure_Robust_Federated_Learning_Proposal.md)
-- [Proposal PDF](proposal/Secure_Robust_Federated_Learning_Proposal.pdf)
-
-### Research profile documents
-
-- [Research profile](docs/Yohannes_Alelign_Biresaw_Research_Profile.md)
-- [Research profile PDF](docs/Yohannes_Alelign_Biresaw_Research_Profile.pdf)
-- [Graduate research statement](docs/Yohannes_Alelign_Biresaw_Graduate_Research_Statement.md)
-- [Graduate research statement PDF](docs/Yohannes_Alelign_Biresaw_Graduate_Research_Statement.pdf)
-- [Academic and research projects](portfolio/Academic_and_Research_Projects.md)
-
-The manuscript reports the completed experiment. The proposal and graduate research statement describe future work and do not claim that malicious-client experiments have already been completed.
-
 ## Planned research extension
 
 The next research direction is **secure and robust federated learning under heterogeneous and adversarial clients**. The central question is how robust aggregation can reject malicious updates without suppressing legitimate updates from clients whose data are naturally non-IID.
