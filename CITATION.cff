@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this research repository, please cite it using the metadata below."
+title: "Evaluating FedAvg and FedProx for Federated Classification of Pneumonia-Associated Lung Opacity Under Non-IID Data"
+type: software
+authors:
+  - family-names: "Biresaw"
+    given-names: "Yohannes Alelign"
+repository-code: "https://github.com/john121319/federated-pneumonia-research"
+version: "1.0.0"
+date-released: "2026-08-01"
+license: "MIT"
+abstract: "A patient-aware research project comparing centralized training, FedAvg, and FedProx for RSNA chest-radiograph classification under IID and controlled non-IID conditions."
+keywords:
+  - artificial intelligence
+  - machine learning
+  - federated learning
+  - trustworthy AI
+  - privacy-preserving machine learning
+  - medical imaging
+  - non-IID data
