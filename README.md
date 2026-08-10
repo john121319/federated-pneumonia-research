@@ -491,6 +491,18 @@ Raw DICOM images, cached image datasets, large trained models, raw predictions, 
 
 Run commands from the repository root.
 
+### Tested Environment
+
+- Python 3.10.20
+- TensorFlow 2.21.0
+- NumPy 2.2.6
+- pandas 2.3.3
+- scikit-learn 1.7.2
+- matplotlib 3.10.9
+- pydicom 3.0.2
+- Pillow 12.3.0
+- Platform: macOS on Apple Silicon
+
 ## 1. Create the Environment
 
 Install the required dependencies:
