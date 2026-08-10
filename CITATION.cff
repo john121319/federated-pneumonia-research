@@ -23,10 +23,6 @@ keywords:
   - artificial intelligence
   - machine learning
   - federated learning
-  - FedAvg
-  - FedProx
-  - medical imaging
-  - chest radiography
-  - non-IID data
-  - distributed machine learning
   - trustworthy AI
+  - medical imaging
+  - non-IID data

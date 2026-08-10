@@ -783,9 +783,9 @@ The models and results in this repository:
 If you use or reference this repository, please cite:
 
 ```bibtex
-@misc{biresaw2026federatedpneumonia,
+@misc{yohannes2026federatedpneumonia,
   author       = {Yohannes Alelign Biresaw},
-  title        = {Federated Learning Under Non-IID Client Heterogeneity for Chest-Radiograph Classification},
+  title        = {Evaluating FedAvg and FedProx for Federated Chest-Radiograph Classification Under Non-IID Client Heterogeneity},
   year         = {2026},
   howpublished = {Independent research repository},
   url          = {https://github.com/john121319/federated-pneumonia-research}
@@ -805,7 +805,7 @@ Haramaya University, Ethiopia
 
 **Research interests:** Cybersecurity · Trustworthy Machine Learning · Federated Learning · Adversarial Machine Learning · Privacy-Preserving Machine Learning · Secure Distributed AI
 
-**Current research experience:** Federated medical-image classification under controlled non-IID client heterogeneity.
+**Current research experience:** Evaluating FedAvg and FedProx for Federated Chest-Radiograph Classification Under Non-IID Client Heterogeneity.
 
 **Future research direction:** Security, robustness, and trustworthiness of federated and distributed machine-learning systems.
 
