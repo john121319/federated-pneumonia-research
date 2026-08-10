@@ -1,4 +1,4 @@
-# Federated Learning Under Non-IID Client Heterogeneity for Chest-Radiograph Classification
+# Evaluating FedAvg and FedProx for Federated Chest-Radiograph Classification Under Non-IID Client Heterogeneity
 
 **Author:** Yohannes Alelign Biresaw
 **Status:** Completed independent research project

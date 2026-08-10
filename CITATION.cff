@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this research repository, please cite it using the metadata below."
-title: "Evaluating FedAvg and FedProx for Federated Classification of Pneumonia-Associated Lung Opacity Under Non-IID Data"
+title: "Evaluating FedAvg and FedProx for Federated Chest-Radiograph Classification Under Non-IID Client Heterogeneity"
 type: software
 authors:
   - family-names: "Biresaw"
