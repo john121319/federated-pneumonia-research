@@ -1,4 +1,4 @@
-# FedAvg and FedProx Under Controlled Non-IID Client Heterogeneity for Pneumonia-Associated Lung-Opacity Classification
+# Evaluating FedAvg and FedProx for Federated Chest-Radiograph Classification Under Non-IID Client Heterogeneity
 
 **Yohannes Alelign Biresaw**  
 BSc in Electrical and Computer Engineering, Haramaya University, Ethiopia  
