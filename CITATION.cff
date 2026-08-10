@@ -1,20 +1,32 @@
 cff-version: 1.2.0
 message: "If you use this research repository, please cite it using the metadata below."
+
 title: "Evaluating FedAvg and FedProx for Federated Chest-Radiograph Classification Under Non-IID Client Heterogeneity"
+
 type: software
+
 authors:
   - family-names: "Biresaw"
     given-names: "Yohannes Alelign"
+
 repository-code: "https://github.com/john121319/federated-pneumonia-research"
+
 version: "1.0.0"
+
 date-released: "2026-08-01"
+
 license: "MIT"
-abstract: "A patient-aware research project comparing centralized training, FedAvg, and FedProx for RSNA chest-radiograph classification under IID and controlled non-IID conditions."
+
+abstract: "A patient-aware federated learning research project comparing centralized training, FedAvg, and FedProx for chest-radiograph classification using the RSNA Pneumonia Detection Challenge dataset under approximately IID and controlled non-IID client heterogeneity."
+
 keywords:
   - artificial intelligence
   - machine learning
   - federated learning
-  - trustworthy AI
-  - privacy-preserving machine learning
+  - FedAvg
+  - FedProx
   - medical imaging
+  - chest radiography
   - non-IID data
+  - distributed machine learning
+  - trustworthy AI
