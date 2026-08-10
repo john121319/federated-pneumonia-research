@@ -10,6 +10,6 @@
   "positive_class_weight": 2.212753555607368,
   "training_batch_minimum": 0.0,
   "training_batch_maximum": 1.0,
-  "prediction_change_after_training": 0.022802820429205894,
+  "prediction_change_after_training": 0.012609765864908695,
   "passed": true
 }
