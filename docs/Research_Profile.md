@@ -11,7 +11,7 @@ My research direction centres on the **security, privacy, and robustness of dist
 
 ## Completed research project
 
-**FedAvg and FedProx Under Controlled Non-IID Client Heterogeneity for Pneumonia-Associated Lung-Opacity Classification**
+**Evaluating FedAvg and FedProx for Federated Chest-Radiograph Classification Under Non-IID Client Heterogeneity**
 
 I developed and executed a patient-aware experimental pipeline using 26,684 RSNA examinations linked to 11,452 original patients. The study compared centralized learning, FedAvg, and FedProx across IID, moderate non-IID, and severe non-IID conditions; repeated experiments across three random seeds; selected models and thresholds using validation data only; and evaluated 18 frozen model-threshold pairs once on the held-out test set.
 
