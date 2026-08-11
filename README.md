@@ -800,7 +800,7 @@ A machine-readable citation file is also available in [`CITATION.cff`](CITATION.
 
 **Yohannes Alelign Biresaw**
 
-BSc in Electrical and Computer Engineering
+BSc in Electrical Engineering (Computer Engineering Focus)
 Haramaya University, Ethiopia
 
 **Research interests:** Cybersecurity · Trustworthy Machine Learning · Federated Learning · Adversarial Machine Learning · Privacy-Preserving Machine Learning · Secure Distributed AI
