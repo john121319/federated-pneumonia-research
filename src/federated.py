@@ -5,14 +5,6 @@ def weighted_average_weights(
     client_weight_sets,
     client_sample_counts,
 ):
-    """
-    Perform sample-size-weighted FedAvg.
-
-    Every item in client_weight_sets is the complete list
-    returned by model.get_weights() for one client.
-
-    Larger clients receive proportionally greater influence.
-    """
 
     if not client_weight_sets:
         raise ValueError(
